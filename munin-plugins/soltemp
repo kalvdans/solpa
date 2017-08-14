@@ -1,13 +1,13 @@
 #!/usr/bin/python
+# coding: latin1
 
 import os
 import sys
 if sys.argv[1:] == ["config"]:
-	print "graph_title Solar voltages"
-	print "graph_vlabel Volt"
+	print "graph_title Temperature"
+	print "graph_vlabel °C"
 	print "graph_category Solar"
-	print "graph_args -u 15 -l 11 --rigid"
-	print "bat.label Battery"
+	print "attic.label Attic"
 	exit()
 
 # Import the ADS1x15 module. Install with sudo pip install
@@ -19,5 +19,5 @@ adc = Adafruit_ADS1x15.ADS1115()
 # See table 3 in the ADS1015/ADS1115 datasheet for more info on gain.
 GAIN = 1
 
-value = adc.read_adc(2, gain=GAIN)
-print "bat.value", value * 0.001397
+value = sum(adc.read_adc(0, gain=GAIN) for i in range(50)) / 50.0
+print "attic.value", 10 + (25 - 10) * (value - 7500.0) / (10000 - 7500)

@@ -1,0 +1,4 @@
+Install:
+
+sudo ln -s $(pwd)/rawadc /etc/munin/plugins/
+

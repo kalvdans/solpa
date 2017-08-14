@@ -1,0 +1,22 @@
+#!/usr/bin/python
+
+import os
+import sys
+if sys.argv[1:] == ["config"]:
+	print "graph_title Solar currents"
+	print "graph_vlabel Ampere"
+	print "graph_category Solar"
+	print "bat.label Battery"
+	exit()
+
+# Import the ADS1x15 module. Install with sudo pip install
+import Adafruit_ADS1x15
+
+# Create an ADS1115 ADC (16-bit) instance.
+adc = Adafruit_ADS1x15.ADS1115()
+
+# See table 3 in the ADS1015/ADS1115 datasheet for more info on gain.
+GAIN = 1
+
+value = sum(adc.read_adc(1, gain=GAIN) for i in range(50)) / 50.0
+print "bat.value", (value - 1800) * 0.006

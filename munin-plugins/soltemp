@@ -20,4 +20,4 @@ adc = Adafruit_ADS1x15.ADS1115()
 GAIN = 1
 
 value = sum(adc.read_adc(0, gain=GAIN) for i in range(50)) / 50.0
-print "attic.value", 10 + (25 - 10) * (value - 7500.0) / (10000 - 7500)
+print "attic.value", 10 + (27 - 10) * (value - 7500.0) / (10000 - 7500)

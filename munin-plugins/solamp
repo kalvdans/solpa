@@ -2,6 +2,8 @@
 
 import os
 import sys
+import time
+
 if sys.argv[1:] == ["config"]:
 	print "graph_title Solar currents"
 	print "graph_vlabel Ampere"
@@ -18,5 +20,9 @@ adc = Adafruit_ADS1x15.ADS1115()
 # See table 3 in the ADS1015/ADS1115 datasheet for more info on gain.
 GAIN = 1
 
-value = sum(adc.read_adc(1, gain=GAIN) for i in range(50)) / 50.0
-print "bat.value", (value - 1800) * 0.006
+def paused_read():
+	time.sleep(0.01)
+	return adc.read_adc(1, gain=GAIN)
+
+value = sum(paused_read() for i in range(50)) / 50.0
+print "bat.value", (value - 1700) * 0.006

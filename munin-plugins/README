@@ -1,4 +1,8 @@
 Install:
 
 sudo ln -s $(pwd)/rawadc /etc/munin/plugins/
+sudo ln -s $(pwd)/solamp /etc/munin/plugins/
+sudo ln -s $(pwd)/solvolt /etc/munin/plugins/
+sudo ln -s $(pwd)/soltemp /etc/munin/plugins/
+sudo ln -s $(pwd)/solpa.conf /etc/munin/plugin-conf.d/
 

@@ -19,17 +19,17 @@ def main(what, lines):
             batt_volt = 0
             for i in range(8):
                 cv = decode_base91(val[8 + 2*i:10 + 2*i])
-                if "volt" in what: print("cell%d" % (i + 1), cv / 1000)
+                if "volt" in what: print("cell%d.value" % (i + 1), cv / 1000)
                 batt_volt += cv
 
             if "all" in what: print("batt volt", batt_volt)
             batt_ma = decode_base91(val[29:32]) * (1 if val[28] == "+" else -1)
             pv_ma = decode_base91(val[32:35])
-            if "amp" in what: print("batt", batt_ma / 1000)
-            if "amp" in what: print("pv", pv_ma / 1000)
-            if "amp" in what: print("load", (pv_ma - batt_ma) / 1000)
+            if "amp" in what: print("batt.value", batt_ma / 1000)
+            if "amp" in what: print("pv.value", pv_ma / 1000)
+            if "amp" in what: print("load.value", (pv_ma - batt_ma) / 1000)
             if "all" in what: print("Status", decode_base91(val[56:59]))
-            if "temp" in what: print("temp", decode_base91(val[24:26])/10-45)
+            if "temp" in what: print("temp.value", decode_base91(val[24:26])/10-45)
 
         if key == "xsbms":
             if "all" in what: print("cvmin", decode_base91(val[5:7]))
@@ -58,11 +58,14 @@ def print_header(what):
         print("graph_category Solar")
         #print("graph_args -u 15 -l 11 --rigid")
         #print("bat.label Battery")
+        for i in range(8):
+            if i != 4:
+                print("cell%d.label Cell %d" % (i+1, i+1))
     elif "amp" in what:
         print("graph_title Solar currents")
         print("graph_vlabel Ampere")
         print("graph_category Solar")
-        print("bat.label Battery")
+        print("batt.label Battery")
         print("pv.label Panel")
         print("load.label Load")
     elif "temp" in what:

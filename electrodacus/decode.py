@@ -2,7 +2,7 @@
 
 import sys
 import os
-import socket
+import urllib.request
 
 def decode_base91(s):
     return sum(91**z * (ord(c) - 35) for z, c in enumerate(reversed(s)))
@@ -10,9 +10,12 @@ def decode_base91(s):
 
 def main(what, lines):
     for line in lines:
-        if not line.startswith("var ") or not line.endswith('";\n'):
+        if isinstance(line, bytes):
+            line = line.decode("ascii")
+        line = line.strip()
+        if not line.startswith("var ") or not line.endswith('";'):
             continue
-        key, val = line[4:-3].split('="')
+        key, val = line[4:-2].split('="')
         if "all" in what: print(key, "length", len(val), val)
 
         val = val.replace('\\\\', '\\')
@@ -58,18 +61,18 @@ def main(what, lines):
                 if "all" in what: print("enA", i, decode_base91(val[6*i:6+6*i]))
             unit = 3.6  # mAh to Coulomb
             if "amp" in what: print("batt_coulomb.value", unit * decode_base91(val[0:6]))
-            if "soc" in what: print("soc2.value", .001 * decode_base91(val[0:6]))
-            if "amp" in what: print("pv_coulomb.value", unit * decode_base91(val[6:12]))
-            if "amp" in what: print("load_coulomb.value", unit * decode_base91(val[30:36]))
+            pv_mah = decode_base91(val[6:12])
+            load_mah = decode_base91(val[30:36])
+            if "amp" in what: print("pv_coulomb.value", unit * pv_mah)
+            if "amp" in what: print("load_coulomb.value", unit * load_mah)
+            if "soc" in what: print("soc2.value", .001 * (pv_mah - load_mah))
     if "soc" in what:
         # 8000 mAh * 7p = 56 Ah capacity
         print("soc.value", cap * soc / 100 - cap + 56)
 
 def web_main(what):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(("192.168.4.1", 80))
-    main(what, s.makefile())
-    s.close()
+    with urllib.request.urlopen('http://192.168.4.1/rawData') as f:
+        main(what, f)
 
 
 def print_header(what):

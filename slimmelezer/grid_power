@@ -1,0 +1,45 @@
+#!/bin/bash
+
+
+case $1 in
+  config)
+    echo graph_title Grid energy
+    echo graph_vlabel kW
+    echo graph_category Grid
+    echo grid_instant_energy_active_pull.label Threephase consumption
+    echo grid_instant_energy_active_pull_l1.label L1 consumption
+    echo grid_instant_energy_active_pull_l2.label L2 consumption
+    echo grid_instant_energy_active_pull_l3.label L3 consumption
+    echo grid_instant_energy_active_push.label Threephase pushback
+    echo grid_instant_energy_active_push_l1.label L1 pushback
+    echo grid_instant_energy_active_push_l2.label L2 pushback
+    echo grid_instant_energy_active_push_l3.label L3 pushback
+    echo grid_instant_energy_reactive_pull.label Threephase reactive consumpton
+    echo grid_instant_energy_reactive_pull_l1.label L1 reactive consumption
+    echo grid_instant_energy_reactive_pull_l2.label L2 reactive consumption
+    echo grid_instant_energy_reactive_pull_l3.label L3 reactive consumption
+    echo grid_instant_energy_reactive_push.label Threephase reactive pushback
+    echo grid_instant_energy_reactive_push_l1.label L1 reactive pushback
+    echo grid_instant_energy_reactive_push_l2.label L2 reactive pushback
+    echo grid_instant_energy_reactive_push_l3.label L3 reactive pushback
+    exit 0
+esac
+
+awk --field-separator '[(*]' '
+/1-0:1.7.0/ { print "grid_instant_energy_active_pull.value " $2 }
+/1-0:2.7.0/ { print "grid_instant_energy_active_push.value " $2 }
+/1-0:3.7.0/ { print "grid_instant_energy_reactive_pull.value " $2 }
+/1-0:4.7.0/ { print "grid_instant_energy_reactive_push.value " $2 }
+/1-0:21.7.0/ { print "grid_instant_energy_active_pull_l1.value " $2 }
+/1-0:41.7.0/ { print "grid_instant_energy_active_pull_l2.value " $2 }
+/1-0:61.7.0/ { print "grid_instant_energy_active_pull_l3.value " $2 }
+/1-0:22.7.0/ { print "grid_instant_energy_active_push_l1.value " $2 }
+/1-0:42.7.0/ { print "grid_instant_energy_active_push_l2.value " $2 }
+/1-0:62.7.0/ { print "grid_instant_energy_active_push_l3.value " $2 }
+/1-0:23.7.0/ { print "grid_instant_energy_reactive_pull_l1.value " $2 }
+/1-0:43.7.0/ { print "grid_instant_energy_reactive_pull_l2.value " $2 }
+/1-0:63.7.0/ { print "grid_instant_energy_reactive_pull_l3.value " $2 }
+/1-0:24.7.0/ { print "grid_instant_energy_reactive_push_l1.value " $2 }
+/1-0:44.7.0/ { print "grid_instant_energy_reactive_push_l2.value " $2 }
+/1-0:64.7.0/ { print "grid_instant_energy_reactive_push_l3.value " $2; exit 0 }
+' < /dev/tcp/192.168.4.201/23

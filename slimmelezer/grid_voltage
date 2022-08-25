@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+case $1 in
+  config)
+    echo graph_title Grid voltage
+    echo graph_vlabel V RMS
+    echo graph_category Grid
+    echo grid_voltage_l1.label Phase L1
+    echo grid_voltage_l2.label Phase L2
+    echo grid_voltage_l3.label Phase L3
+    exit 0
+esac
+
+awk --field-separator '[(*]' '
+/1-0:32.7.0/ { print "grid_voltage_l1.value " $2 }
+/1-0:52.7.0/ { print "grid_voltage_l2.value " $2 }
+/1-0:72.7.0/ { print "grid_voltage_l3.value " $2; exit 0 }
+' < /dev/tcp/192.168.4.201/23

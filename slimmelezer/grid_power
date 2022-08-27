@@ -7,7 +7,6 @@ case $1 in
     echo graph_vlabel W
     echo graph_category Grid
     echo grid_instant_energy_active_pull.label Threephase consumption
-    echo grid_accumulated_energy_active_pull.label Threephase consumption average
     echo grid_instant_energy_active_pull_l1.label L1 consumption
     echo grid_instant_energy_active_pull_l2.label L2 consumption
     echo grid_instant_energy_active_pull_l3.label L3 consumption
@@ -18,6 +17,11 @@ case $1 in
     echo grid_instant_energy_reactive_push_l1.label L1 reactive pushback
     echo grid_instant_energy_reactive_push_l2.label L2 reactive pushback
     echo grid_instant_energy_reactive_push_l3.label L3 reactive pushback
+
+    echo grid_accumulated_energy_active_pull.label Threephase consumption average
+    echo grid_accumulated_energy_active_push.label Threephase pushback average
+    echo grid_accumulated_energy_reactive_pull.label Threephase reactive consumption average
+    echo grid_accumulated_energy_reactive_push.label Threephase reactive pushback average
 
     echo grid_accumulated_energy_active_pull.type DDERIVE
     echo grid_accumulated_energy_active_push.type DDERIVE

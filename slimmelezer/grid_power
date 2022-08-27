@@ -7,6 +7,7 @@ case $1 in
     echo graph_vlabel W
     echo graph_category Grid
     echo grid_instant_energy_active_pull.label Threephase consumption
+    echo grid_accumulated_energy_active_pull.label Threephase consumption average
     echo grid_instant_energy_active_pull_l1.label L1 consumption
     echo grid_instant_energy_active_pull_l2.label L2 consumption
     echo grid_instant_energy_active_pull_l3.label L3 consumption
@@ -17,10 +18,19 @@ case $1 in
     echo grid_instant_energy_reactive_push_l1.label L1 reactive pushback
     echo grid_instant_energy_reactive_push_l2.label L2 reactive pushback
     echo grid_instant_energy_reactive_push_l3.label L3 reactive pushback
+
+    echo grid_accumulated_energy_active_pull.type DDERIVE
+    echo grid_accumulated_energy_active_push.type DDERIVE
+    echo grid_accumulated_energy_reactive_pull.type DDERIVE
+    echo grid_accumulated_energy_reactive_push.type DDERIVE
     exit 0
 esac
 
 awk --field-separator '[(*]' '
+/1-0:1.8.0/ { print "grid_accumulated_energy_active_pull.value " $2 * 3600000 }
+/1-0:2.8.0/ { print "grid_accumulated_energy_active_push.value " $2 * 3600000 }
+/1-0:3.8.0/ { print "grid_accumulated_energy_reactive_pull.value " $2 * 3600000 }
+/1-0:4.8.0/ { print "grid_accumulated_energy_reactive_push.value " $2 * 3600000 }
 /1-0:1.7.0/ { print "grid_instant_energy_active_pull.value " $2 * 1000 }
 /1-0:2.7.0/ { print "grid_instant_energy_active_push.value " $2 * 1000 }
 /1-0:3.7.0/ { print "grid_instant_energy_reactive_pull.value " $2 * 1000 }
